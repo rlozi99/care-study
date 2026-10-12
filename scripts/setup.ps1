@@ -1,7 +1,7 @@
 ﻿# setup.ps1
 # care 인프라 초기 셋업 자동화 스크립트
 # 사용법: PowerShell에서 ./setup.ps1 실행
-
+# test
 
 # ===== 아래 값들은 본인 정보로 채워넣기 =====
 $githubUsername = "<GITHUB_USERNAME>"
