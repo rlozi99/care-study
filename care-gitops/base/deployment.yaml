@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: care-backend
+  labels:
+    app: care-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: care-backend
+  template:
+    metadata:
+      labels:
+        app: care-backend
+    spec:
+      containers:
+        - name: care-backend
+          image: <ACCOUNT_ID>.dkr.ecr.ap-northeast-2.amazonaws.com/care:<COMMIT_SHA>
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: care-secrets
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 3

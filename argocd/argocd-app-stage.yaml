@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: care-backend-stage
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<GITHUB_USERNAME>/<GITOPS_REPO>.git
+    targetRevision: main
+    path: overlays/stage          # base 대신 overlays/stage를 봄
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: care-stage        # 전용 네임스페이스로 분리
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true       # care-stage 네임스페이스가 없으면 자동 생성

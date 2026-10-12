@@ -1,0 +1,9 @@
+.env*
+*.tfstate*
+.terraform/
+*.tfvars
+secrets*
+!secrets.example.ps1
+*.pem
+*.key
+images.json

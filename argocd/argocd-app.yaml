@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application                   # 이건 ArcoCD에서 관리할 배포 대상이다 선언
+metadata:
+  name: care-backend
+  namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: argocd-notifications
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: argocd-notifications
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<GITHUB_USERNAME>/<GITOPS_REPO>.git         # 어느 레포
+    targetRevision: main                                          # 어느 브랜치
+    path: base                                                    # 어느 폴더를 볼지  
+  destination:
+    server: https://kubernetes.default.svc                        # 어느 클러스터
+    namespace: default                                            # 어느 네임스페이스에 배포할지
+  syncPolicy:
+    automated:                                                    # 자동 동기화 켜는 설정
+      prune: true                                                 # care-gitops 에서 yaml 파일을 삭제하면 EKS에서도 그 리소스를 자동으로 삭제해라
+      selfHeal: true                                              # 누군가 kubectl로 클러스터를 직접 수동해도 ArgoCD가 감지해서 Git상태로 자동 되돌림 -> 드리프트 방지 기능
